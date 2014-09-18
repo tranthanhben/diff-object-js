@@ -1,0 +1,68 @@
+t1={
+  name:"ben",
+  age:15,
+  size:["X","Y","Z"],
+  tipping: [{
+                currency: "USD",
+                exchange_rate: 21000,
+                tipping_budget: {
+                    amount: 10000,
+                    currency: "USD",
+                    exchange_rate: 21000
+                },
+                tipping_days: 2,
+                tipping_description: "string",
+                tipping_payment: "onsite",
+                tipping_rate: 10000,
+                tipping_remarks: "string",
+                tipping_unit: 10
+            }, {
+                currency: "USD",
+                exchange_rate: 21000,
+                tipping_budget: {
+                    amount: 10000,
+                    currency: "USD",
+                    exchange_rate: 21000
+                },
+                tipping_days: 2,
+                tipping_description: "string",
+                tipping_payment: "onsite",
+                tipping_rate: 10000,
+                tipping_remarks: "string",
+                tipping_unit: 10
+            }]
+};
+t2={
+  name:"ben",
+  age:15,
+  size:["X","Z"],
+  tipping: [{
+                currency: "USD",
+                exchange_rate: 21000,
+                tipping_budget: {
+                    amount: 10000,
+                    currency: "USD",
+                    exchange_rate: 21000
+                },
+                tipping_days: 2,
+                tipping_description: "string",
+                tipping_payment: "onsite",
+                tipping_rate: 10000,
+                tipping_remarks: "string",
+                tipping_unit: 10
+            }, {
+                currency: "USD",
+                exchange_rate: 21000,
+                tipping_budget: {
+                    amount: 10000,
+                    currency: "VNd",
+                    exchange_rate: 200
+                },
+                tipping_days: 2,
+                tipping_description: "string",
+                tipping_payment: "onsite",
+                tipping_rate: 10000,
+                tipping_remarks: "string",
+                tipping_unit: 10
+            }]
+}
