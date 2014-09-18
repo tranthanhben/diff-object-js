@@ -1,23 +1,40 @@
-var a={a:1,b:2,c:"asdf",d:[1,"2",{ad:1}]};
-var b={a:2,b:2,c:1,d:[1,"2",{ad:1}]};
-function addObjArray(arrayResult,arrayStart,start,end,status){
+
+function addObjArray(arrayResult,arrayStart,start,end,status,flag){
   var len=arrayResult.length;
-  for (var i = 0; i < end-start; i++) {
-    if(status==="create"){
-      arrayResult[len+i] = diffObject({},arrayStart[i]);
-    }else if(status==="remove"){
-      arrayResult[len+i] = diffObject(arrayStart[i],{});
+  if(flag){
+    for (var i = 0; i <= end-start; i++) {
+      if(status==="create"){
+        arrayResult[len+i] = diffObject({},arrayStart[start+i]);
+      }else if(status==="remove"){
+        arrayResult[len+i] = diffObject(arrayStart[start+i],{});
+      }
     }
+  }else{
+    for (var i = 0; i < end-start; i++) {
+      if(status==="create"){
+        arrayResult[len+i] = diffObject({},arrayStart[start+i]);
+      }else if(status==="remove"){
+        arrayResult[len+i] = diffObject(arrayStart[start+i],{});
+      }
+    }
+    arrayResult[len+end-start]=diffObject(arrayStart[end],arrayStart[end]);
   }
-  arrayResult[len+end-start]=diffObject(arrayStart[end],arrayStart[end]);
+
   return arrayResult;
 }
-function addArray(arrayResult,arrayStart,start,end,status) {
+function addArray(arrayResult,arrayStart,start,end,status,flag) {
   var len=arrayResult.length;
-  for (var i = 0; i < end-start; i++) {
-    arrayResult[len+i] = new diff(undefined,arrayStart[start+i],status);
-  };
-  arrayResult[len+end-start] = new diff(arrayStart[end],arrayStart[end],"nochange");
+  if(flag){
+    for (var i = 0; i <= end-start; i++) {
+      arrayResult[len+i] = new diff(undefined,arrayStart[start+i],status);
+    };
+  }else{
+    for (var i = 0; i < end-start; i++) {
+      arrayResult[len+i] = new diff(undefined,arrayStart[start+i],status);
+    };
+    arrayResult[len+end-start] = new diff(arrayStart[end],arrayStart[end],"nochange");
+  }
+
   return arrayResult;
 }
 function isArrayObject(arr){
@@ -35,25 +52,25 @@ function diffArray(arrayA,arrayB){
   var lenA=arrayA.length;
   var lenB=arrayB.length;
   if(isArrayObject(arrayA) && isArrayObject(arrayB)){
-    while(i<lenA && j<lenB) {
+    while(i <= lenA || j <= lenB) {
       if (i>=lenA) {
-        arrayResult=addObjArray(arrayResult,arrayB,j,lenB,"create");
+        arrayResult=addObjArray(arrayResult,arrayB,j,lenB-1,"create",true);
         return arrayResult;
       };
       if (j>=lenB) {
-        arrayResult=addObjArray(arrayResult,arrayA,i,lenA,"remove");
+        arrayResult=addObjArray(arrayResult,arrayA,i,lenA-1,"remove",true);
         return arrayResult;
       };
       var resultA=objOfArray(arrayA[i],arrayB,j);
       if(resultA.of){
         //a[i] in arrB is true
-        arrayResult = addObjArray(arrayResult,arrayB,j,resultA.index,"create");
+        arrayResult = addObjArray(arrayResult,arrayB,j,resultA.index,"create",false);
         j=resultA.index;
       }else if(resultA.status==="ok"){
         //a[i] in arrB is false
         var resultB=objOfArray(arrayB[j],arrayA,i);
         if (resultB.of) {
-          arrayResult = addObjArray(arrayResult,arrayA,i,resultB.index,"remove");
+          arrayResult = addObjArray(arrayResult,arrayA,i,resultB.index,"remove",false);
           i=resultB.index;
         }else if(resultB.status==="ok"){
           var len=arrayResult.length;
@@ -64,25 +81,25 @@ function diffArray(arrayA,arrayB){
       j+=1;
     }
   }else{
-    while(i<lenA && j<lenB) {
+    while(i<=lenA || j<=lenB) {
       if (i>=lenA) {
-        arrayResult=addArray(arrayResult,arrayB,j,lenB,"create");
+        arrayResult=addArray(arrayResult,arrayB,j,lenB-1,"create",true);
         return arrayResult;
       };
       if (j>=lenB) {
-        arrayResult=addArray(arrayResult,arrayA,i,lenA,"remove");
+        arrayResult=addArray(arrayResult,arrayA,i,lenA-1,"remove",true);
         return arrayResult;
       };
       var resultA=ptOfArray(arrayA[i],arrayB,j);
       if(resultA.of){
         //a[i] in arrB is true
-        arrayResult = addArray(arrayResult,arrayB,j,resultA.index,"create");
+        arrayResult = addArray(arrayResult,arrayB,j,resultA.index,"create",false);
         j=resultA.index;
       }else{
         //a[i] in arrB is false
         var resultB=ptOfArray(arrayB[j],arrayA,i);
         if (resultB.of) {
-          arrayResult = addArray(arrayResult,arrayA,i,resultB.index,"remove");
+          arrayResult = addArray(arrayResult,arrayA,i,resultB.index,"remove",false);
           i=resultB.index;
         }else{
           var len=arrayResult.length;
